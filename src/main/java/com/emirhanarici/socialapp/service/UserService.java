@@ -1,6 +1,6 @@
 package com.emirhanarici.socialapp.service;
 
-import com.emirhanarici.socialapp.controller.CreateUserRequest;
+import com.emirhanarici.socialapp.dto.CreateUserRequest;
 import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.converter.UserConverter;
 import com.emirhanarici.socialapp.entity.User;
@@ -34,6 +34,17 @@ public class UserService {
                 .map(UserDto::convertToDto)
                 .collect(Collectors.toList());
     }
+
+
+    public UserDto getOneUserById(Integer userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow();
+
+        return UserDto.convertToDto(user);
+    }
+
+
 
 
 }

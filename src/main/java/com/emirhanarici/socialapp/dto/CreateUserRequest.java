@@ -1,4 +1,4 @@
-package com.emirhanarici.socialapp.controller;
+package com.emirhanarici.socialapp.dto;
 
 import java.util.List;
 

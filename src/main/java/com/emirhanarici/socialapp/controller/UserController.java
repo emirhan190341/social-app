@@ -1,5 +1,7 @@
 package com.emirhanarici.socialapp.controller;
 
+import com.emirhanarici.socialapp.dto.CreateUserRequest;
+import com.emirhanarici.socialapp.dto.UpdateUserRequest;
 import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +23,18 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUser() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity
                 .ok(userService.getAllUser());
     }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getOneUserById(@PathVariable Integer userId) {
+        return ResponseEntity
+                .ok(userService.getOneUserById(userId));
+    }
+
+
 
 
 }

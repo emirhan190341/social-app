@@ -1,10 +1,14 @@
 package com.emirhanarici.socialapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -32,6 +36,11 @@ public class User {
     @ElementCollection
     private List<String> following;
     private String bio;
+    @Column(name = "createdAt")
+    //LocalDateTimeStamp
+    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy/MM/dd")
+    private Date createdAt;
 
 
 }
