@@ -13,7 +13,7 @@ public class UserConverter {
     private final UserRepository userRepository;
 
     public User mapToEntity(CreateUserRequest request) {
-        return new User(null, request.username(), request.email(), request.password(), request.profilePic(), request.followers(), request.following(), request.bio(),null);
+        return new User(null, request.username(), request.email(), request.password(), request.profilePic(), request.followers(), request.following(), request.bio(),null,null);
     }
 
 }
