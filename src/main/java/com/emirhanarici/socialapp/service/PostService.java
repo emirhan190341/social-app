@@ -1,8 +1,8 @@
 package com.emirhanarici.socialapp.service;
 
-import com.emirhanarici.socialapp.controller.PostController;
 import com.emirhanarici.socialapp.dto.CreatePostRequest;
 import com.emirhanarici.socialapp.dto.PostDto;
+import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.converter.PostConverter;
 import com.emirhanarici.socialapp.entity.Post;
 import com.emirhanarici.socialapp.repository.PostRepository;
@@ -18,6 +18,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostConverter postConverter;
+    private final UserService userService;
 
     public PostDto createOnePost(CreatePostRequest request) {
 
@@ -37,4 +38,19 @@ public class PostService {
     }
 
 
+    public void likeOnePost(Long postId, Integer userId) {
+
+        UserDto user = userService.getOneUserById(userId);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow();
+
+        List<String> likes = post.getLikes();
+        likes.add(String.valueOf(user.id()));
+
+        postRepository.save(post);
+
+
+
+    }
 }

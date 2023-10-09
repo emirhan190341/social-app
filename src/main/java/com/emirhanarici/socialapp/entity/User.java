@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +27,7 @@ public class User implements UserDetails {
     @GeneratedValue
     private Integer id;
     private String username;
+    private String name;
     private String email;
     private String password;
     private String profilePic;
@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public User(List<String> followers) {
+        this.followers = followers;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

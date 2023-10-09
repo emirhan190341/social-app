@@ -28,9 +28,14 @@ public class PostController {
                 .ok(postService.getAllPosts());
     }
 
+    @PutMapping("/like/{postId}")
+    public ResponseEntity<String> likeOnePost(@PathVariable Long postId,Integer userId) {
 
+        postService.likeOnePost(postId,userId);
 
-
+        return ResponseEntity
+                .ok("Post liked successfully.");
+    }
 
 
 }

@@ -1,7 +1,6 @@
 package com.emirhanarici.socialapp.controller;
 
 import com.emirhanarici.socialapp.dto.CreateUserRequest;
-import com.emirhanarici.socialapp.dto.UpdateUserRequest;
 import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
+
         return ResponseEntity
                 .ok(userService.getAllUser());
     }
@@ -35,6 +35,23 @@ public class UserController {
     }
 
 
+
+
+
+
+
+
+    @PutMapping("/follow/{followingId}")
+    public ResponseEntity<String> followOneUserById(@PathVariable Integer followingId) {
+        boolean bool = userService.followOneUserById(followingId);
+
+        if (bool) {
+            return ResponseEntity
+                    .ok("User followed.");
+        }
+        return ResponseEntity
+                .ok("User unfollowed");
+    }
 
 
 }
