@@ -56,6 +56,15 @@ public class User implements UserDetails {
         this.followers = followers;
     }
 
+
+    public User(String username, String name, String password, String profilePic, String bio) {
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.profilePic = profilePic;
+        this.bio = bio;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

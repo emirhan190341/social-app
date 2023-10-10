@@ -1,13 +1,16 @@
 package com.emirhanarici.socialapp.service;
 
 import com.emirhanarici.socialapp.dto.CreateUserRequest;
+import com.emirhanarici.socialapp.dto.UpdateUserRequest;
 import com.emirhanarici.socialapp.dto.UserDto;
+import com.emirhanarici.socialapp.dto.UserUpdateDto;
 import com.emirhanarici.socialapp.dto.converter.UserConverter;
 import com.emirhanarici.socialapp.entity.User;
 import com.emirhanarici.socialapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +22,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserConverter userConverter;
+    private final PasswordEncoder passwordEncoder;
 
-    public Integer getUserId() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(auth.getName()).get();
-        return user.getId();
-    }
 
     public UserDto createUser(CreateUserRequest request) {
 
@@ -89,5 +88,32 @@ public class UserService {
         }
     }
 
+    public UserUpdateDto updateOneUserById(UpdateUserRequest request, Integer userId) {
 
+        return userRepository.findById(userId)
+                .map(user -> {
+//                    user.setId(userId);
+                    user.setUsername(request.username());
+                    user.setName(request.name());
+                    user.setPassword(passwordEncoder.encode(request.password()));
+                    user.setProfilePic(request.profilePic());
+                    user.setBio(request.bio());
+                    User savedUser = userRepository.save(user);
+                    String message = "User updated successfully.";
+                    return UserUpdateDto.convertToDto(savedUser, message);
+                }).orElseThrow();
+    }
+
+
+    //fetching userId with using authentication info
+    public Integer getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(auth.getName()).get();
+        return user.getId();
+    }
+
+
+    public void deleteOneUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
 }
