@@ -29,12 +29,16 @@ public class PostController {
     }
 
     @PutMapping("/like/{postId}")
-    public ResponseEntity<String> likeOnePost(@PathVariable Long postId,Integer userId) {
+    public ResponseEntity<String> likeOnePost(@PathVariable Long postId) {
 
-        postService.likeOnePost(postId,userId);
+        boolean bool = postService.likeOnePost(postId);
 
+        if (bool) {
+            return ResponseEntity
+                    .ok("Post liked successfully.");
+        }
         return ResponseEntity
-                .ok("Post liked successfully.");
+                .ok("Post unliked successfully.");
     }
 
 

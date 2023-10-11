@@ -6,6 +6,7 @@ import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.UserUpdateDto;
 import com.emirhanarici.socialapp.dto.converter.UserConverter;
 import com.emirhanarici.socialapp.entity.User;
+import com.emirhanarici.socialapp.exception.UserFollowException;
 import com.emirhanarici.socialapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,8 @@ public class UserService {
 
 
     public UserDto createUser(CreateUserRequest request) {
+
+        //email already exist exception
 
         User user = userRepository.save(userConverter.mapToEntity(request));
 
@@ -48,6 +52,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow();
 
+        //exception handling
+
         return UserDto.convertToDto(user);
     }
 
@@ -55,6 +61,10 @@ public class UserService {
     public boolean followOneUserById(Integer followingId) {
 
         Integer userId = getUserId();
+
+        if (userId.equals(followingId)) {
+            throw new UserFollowException("You cannot follow/unfollow yourself.");
+        }
 
         User user1 = userRepository.findById(userId)
                 .orElseThrow();
@@ -88,13 +98,23 @@ public class UserService {
         }
     }
 
-    public UserUpdateDto updateOneUserById(UpdateUserRequest request, Integer userId) {
+
+    public UserUpdateDto updateOneUserById(UpdateUserRequest request, Integer userId, Principal connectedUser) {
+
+        //var userPrincipal = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
 
         return userRepository.findById(userId)
                 .map(user -> {
-//                    user.setId(userId);
+                    //user.setId(userId);
                     user.setUsername(request.username());
                     user.setName(request.name());
+
+                    /*
+                    if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+                        throw new IllegalStateException("Wrong password");
+                    }
+                     */
                     user.setPassword(passwordEncoder.encode(request.password()));
                     user.setProfilePic(request.profilePic());
                     user.setBio(request.bio());
@@ -102,18 +122,20 @@ public class UserService {
                     String message = "User updated successfully.";
                     return UserUpdateDto.convertToDto(savedUser, message);
                 }).orElseThrow();
+
+        //exception handling
     }
 
+    public void deleteOneUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
 
     //fetching userId with using authentication info
+
     public Integer getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(auth.getName()).get();
         return user.getId();
     }
 
-
-    public void deleteOneUserById(Integer userId) {
-        userRepository.deleteById(userId);
-    }
 }

@@ -2,7 +2,6 @@ package com.emirhanarici.socialapp.service;
 
 import com.emirhanarici.socialapp.dto.CreatePostRequest;
 import com.emirhanarici.socialapp.dto.PostDto;
-import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.converter.PostConverter;
 import com.emirhanarici.socialapp.entity.Post;
 import com.emirhanarici.socialapp.repository.PostRepository;
@@ -38,19 +37,29 @@ public class PostService {
     }
 
 
-    public void likeOnePost(Long postId, Integer userId) {
+    public boolean likeOnePost(Long postId) {
 
-        UserDto user = userService.getOneUserById(userId);
+        Integer userId = userService.getUserId();
 
         Post post = postRepository.findById(postId)
                 .orElseThrow();
 
         List<String> likes = post.getLikes();
-        likes.add(String.valueOf(user.id()));
 
-        postRepository.save(post);
+        if (!likes.contains(userId.toString())) {
+            likes.add(String.valueOf(userId));
+            postRepository.save(post);
 
+            return true;
+        } else {
+            likes.remove(userId.toString());
+            postRepository.save(post);
+
+            return false;
+        }
 
 
     }
+
+
 }

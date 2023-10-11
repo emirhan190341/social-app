@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
-        return http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
@@ -52,8 +52,17 @@ public class SecurityConfiguration {
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessHandler((request, response, authentication)
+//                                -> SecurityContextHolder.clearContext())
+//                        .invalidateHttpSession(true)
+//                        .deleteCookies("JSESSIONID")
+//                );
+
+        return http.build();
     }
 }
 

@@ -7,8 +7,10 @@ import com.emirhanarici.socialapp.dto.UserUpdateDto;
 import com.emirhanarici.socialapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequest request) {
@@ -37,9 +40,9 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestBody UpdateUserRequest request, @PathVariable Integer userId) {
+    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestBody UpdateUserRequest request, @PathVariable Integer userId, Principal connectedUser) {
         return ResponseEntity
-                .ok(userService.updateOneUserById(request, userId));
+                .ok(userService.updateOneUserById(request, userId, connectedUser));
     }
 
 
