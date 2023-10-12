@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class UserConverter {
 
     public User mapToEntity(CreateUserRequest request) {
-        return new User(null, request.username(), request.name(), request.email(), request.password(), request.profilePic(), request.followers(), request.following(), request.bio(), null, null);
+        return new User(null, request.username(), request.name(), request.email(), request.password(), request.profilePic(), request.followers(), request.following(), request.bio(), null, null,null);
     }
 
 }

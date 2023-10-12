@@ -1,5 +1,6 @@
 package com.emirhanarici.socialapp.entity;
 
+import com.emirhanarici.socialapp.token.Token;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,8 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     public User(List<String> followers) {
         this.followers = followers;
