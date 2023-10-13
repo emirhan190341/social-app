@@ -4,6 +4,7 @@ package com.emirhanarici.socialapp.auth;
 import com.emirhanarici.socialapp.config.JwtService;
 import com.emirhanarici.socialapp.entity.Role;
 import com.emirhanarici.socialapp.entity.User;
+import com.emirhanarici.socialapp.exception.AuthenticationFailedException;
 import com.emirhanarici.socialapp.repository.TokenRepository;
 import com.emirhanarici.socialapp.repository.UserRepository;
 import com.emirhanarici.socialapp.token.Token;
@@ -11,6 +12,7 @@ import com.emirhanarici.socialapp.token.TokenType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,24 +50,54 @@ public class AuthenticationService {
                 .build();
     }
 
+//    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getEmail(),
+//                        request.getPassword()
+//                )
+//        );
+//
+//        var user = userRepository.findByEmail(request.getEmail())
+//                .orElseThrow();
+//
+//
+//
+//        var jwtToken = jwtService.generateToken(user);
+//        revokeAllUserTokens(user);
+//        saveUserToken(user, jwtToken);
+//
+//        return AuthenticationResponse.builder()
+//                .token(jwtToken)
+//                .build();
+//    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
 
-        var jwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+            var user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow();
 
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+            var jwtToken = jwtService.generateToken(user);
+            revokeAllUserTokens(user);
+            saveUserToken(user, jwtToken);
+
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        } catch (AuthenticationException e) {
+            // Handle authentication failure, e.g., return an error response
+            // You can create a custom exception or use the default authentication failure message
+            throw new AuthenticationFailedException("Authentication failed");
+        }
     }
+
 
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());

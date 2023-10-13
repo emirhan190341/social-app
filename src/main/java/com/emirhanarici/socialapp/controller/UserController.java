@@ -5,6 +5,7 @@ import com.emirhanarici.socialapp.dto.UpdateUserRequest;
 import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.UserUpdateDto;
 import com.emirhanarici.socialapp.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -21,7 +22,7 @@ public class UserController {
     SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
         return ResponseEntity
                 .ok(userService.createUser(request));
     }

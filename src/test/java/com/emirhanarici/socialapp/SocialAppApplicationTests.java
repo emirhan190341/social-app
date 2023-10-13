@@ -10,4 +10,6 @@ class SocialAppApplicationTests {
 	void contextLoads() {
 	}
 
+
+
 }
