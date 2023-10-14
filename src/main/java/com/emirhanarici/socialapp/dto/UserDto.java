@@ -17,6 +17,8 @@ public record UserDto(
         String bio,
         Date createdAt
 ) {
+
+
     public static UserDto convertToDto(User from) {
         return new UserDto(from.getId(), from.getUsername(), from.getName(), from.getEmail(), from.getPassword(), from.getProfilePic(), from.getFollowers(), from.getFollowing(), from.getBio(), from.getCreatedAt());
     }

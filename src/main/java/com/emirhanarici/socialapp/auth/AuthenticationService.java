@@ -45,32 +45,12 @@ public class AuthenticationService {
 
         saveUserToken(savedUser, jwtToken);
 
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .user(mapToRegisterResponse(savedUser, request.getUsername()))
                 .build();
     }
-
-//    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getEmail(),
-//                        request.getPassword()
-//                )
-//        );
-//
-//        var user = userRepository.findByEmail(request.getEmail())
-//                .orElseThrow();
-//
-//
-//
-//        var jwtToken = jwtService.generateToken(user);
-//        revokeAllUserTokens(user);
-//        saveUserToken(user, jwtToken);
-//
-//        return AuthenticationResponse.builder()
-//                .token(jwtToken)
-//                .build();
-//    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
@@ -92,8 +72,6 @@ public class AuthenticationService {
                     .token(jwtToken)
                     .build();
         } catch (AuthenticationException e) {
-            // Handle authentication failure, e.g., return an error response
-            // You can create a custom exception or use the default authentication failure message
             throw new AuthenticationFailedException("Authentication failed");
         }
     }
@@ -121,5 +99,9 @@ public class AuthenticationService {
                 .expired(false)
                 .build();
         tokenRepository.save(token);
+    }
+
+    private RegisterUserResponse mapToRegisterResponse(User user, String username) {
+        return new RegisterUserResponse(user.getId(), username, user.getName(), user.getEmail(), user.getPassword(), user.getProfilePic(), user.getBio());
     }
 }
