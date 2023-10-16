@@ -31,7 +31,7 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@Valid @RequestBody AuthenticationRequest request) {
         try {
-            AuthenticationResponse response = authenticationService.authenticate(request);
+            AuthenticationResponse response = authenticationService.authenticate(request );
             return ResponseEntity.ok(response);
         } catch (AuthenticationFailedException e) {
 

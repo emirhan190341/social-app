@@ -68,8 +68,10 @@ public class AuthenticationService {
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
 
+
             return AuthenticationResponse.builder()
                     .token(jwtToken)
+                    .user(mapToRegisterResponse(user,request.getUsername()))
                     .build();
         } catch (AuthenticationException e) {
             throw new AuthenticationFailedException("Authentication failed");

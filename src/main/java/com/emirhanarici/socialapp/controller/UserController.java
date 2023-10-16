@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -41,9 +41,9 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestBody UpdateUserRequest request, @PathVariable Integer userId, Principal connectedUser) {
+    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestPart(name = "user") UpdateUserRequest request, @PathVariable Integer userId,@RequestPart(name = "image") MultipartFile profilePic) {
         return ResponseEntity
-                .ok(userService.updateOneUserById(request, userId, connectedUser));
+                .ok(userService.updateOneUserById(request, userId, profilePic));
     }
 
 
@@ -64,8 +64,5 @@ public class UserController {
         userService.deleteOneUserById(userId);
         return ResponseEntity.noContent().build();
     }
-
-
-
 
 }
