@@ -22,7 +22,7 @@ public class Post {
     @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posted_by", nullable = false)
+    @JoinColumn(name = "postedBy", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     private String title;

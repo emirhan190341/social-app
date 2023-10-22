@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,10 +39,11 @@ public class UserController {
                 .ok(userService.getOneUserById(userId));
     }
 
+    //@RequestPart(name = "image") MultipartFile profilePic is missing
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestPart(name = "user") UpdateUserRequest request, @PathVariable Integer userId,@RequestPart(name = "image") MultipartFile profilePic) {
+    public ResponseEntity<UserUpdateDto> updateOneUserById(@RequestBody UpdateUserRequest request, @PathVariable Integer userId) {
         return ResponseEntity
-                .ok(userService.updateOneUserById(request, userId, profilePic));
+                .ok(userService.updateOneUserById(request, userId));
     }
 
 

@@ -23,9 +23,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDto>> getAllPosts() {
+    public ResponseEntity<List<PostDto>> getFeedPosts() {
         return ResponseEntity
-                .ok(postService.getAllPosts());
+                .ok(postService.getFeedPosts());
     }
 
     @PutMapping("/like/{postId}")

@@ -2,12 +2,14 @@ package com.emirhanarici.socialapp.service;
 
 import com.emirhanarici.socialapp.dto.CreatePostRequest;
 import com.emirhanarici.socialapp.dto.PostDto;
+import com.emirhanarici.socialapp.dto.UserDto;
 import com.emirhanarici.socialapp.dto.converter.PostConverter;
 import com.emirhanarici.socialapp.entity.Post;
 import com.emirhanarici.socialapp.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +29,24 @@ public class PostService {
     }
 
 
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+    public List<PostDto> getFeedPosts() {
+
+        List<Post> posts  = new ArrayList<>();
+
+        UserDto user = userService.getOneUserById(userService.getUserId());
+        List<String> following = user.following();
+
+        List<Long> followingIds = following.stream().map(Long::parseLong).toList();
+
+        for (Long followingId : followingIds) {
+            posts.addAll(postRepository.findByUser_Id(followingId).orElseThrow());
+        }
 
         return posts
                 .stream()
                 .map(PostDto::mapToDto)
                 .collect(Collectors.toList());
     }
-
 
     public boolean likeOnePost(Long postId) {
 

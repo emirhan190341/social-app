@@ -1,6 +1,7 @@
 package com.emirhanarici.socialapp.config;
 
 import com.cloudinary.Cloudinary;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,15 +11,19 @@ import java.util.Map;
 @Configuration
 public class CloudinaryConfig {
 
+
     private final String CLOUD_NAME = "dcvshwvez";
     private final String API_KEY = "644943966976829";
 
+    @Value("${API_SECRET}")
+    private String API_SECRET;
+
     @Bean
-    public Cloudinary cloudinary(){
+    public Cloudinary cloudinary() {
         Map<String, String> config = new HashMap<>();
-        config.put("cloud_name",CLOUD_NAME);
-        config.put("api_key",API_KEY);
-        config.put("api_secret",API_SECRET);
+        config.put("cloud_name", CLOUD_NAME);
+        config.put("api_key", API_KEY);
+        config.put("api_secret", API_SECRET);
         return new Cloudinary(config);
     }
 }

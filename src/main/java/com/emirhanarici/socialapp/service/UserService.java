@@ -106,7 +106,8 @@ public class UserService {
     }
 
 
-    public UserUpdateDto updateOneUserById(UpdateUserRequest request, Integer userId,  MultipartFile profilePic) {
+    // MultipartFile profilePic is missing
+    public UserUpdateDto updateOneUserById(UpdateUserRequest request, Integer userId ) {
 
         //var userPrincipal = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
@@ -121,21 +122,8 @@ public class UserService {
                     user.setBio(request.bio());
                     user.setProfilePic("a");
 
-                    Map data = fileUpload.uploadFile(profilePic);
-                    user.setProfilePic(data.get("url").toString());
-
-
-//                    if (request.profilePic() != null && !request.profilePic().isEmpty()) {
-//                       //Upload the new profile picture to Cloudinary
-//                        try {
-//                            String profilePicUrl = uploadProfilePicture(profilePic);
-//                            System.out.println("Buradayim");
-//                            user.setProfilePic(profilePicUrl);
-//                        } catch (IOException e) {
-//                            throw new FileUploadException("Failed to upload profile picture");
-//                        }
-//                    }
-//                    System.out.println(request.profilePic());
+//                    Map data = fileUpload.uploadFile(profilePic);
+//                    user.setProfilePic(data.get("url").toString());
 
                     User savedUser = userRepository.save(user);
 
@@ -150,8 +138,6 @@ public class UserService {
     public void deleteOneUserById(Integer userId) {
         userRepository.deleteById(userId);
     }
-
-    //fetching userId with using authentication info
 
     public Integer getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
