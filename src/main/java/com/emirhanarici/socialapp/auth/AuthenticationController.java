@@ -35,7 +35,6 @@ public class AuthenticationController {
             return ResponseEntity.ok(response);
         } catch (AuthenticationFailedException e) {
 
-            // Authentication failed, return an error response
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Invalid credentials");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);

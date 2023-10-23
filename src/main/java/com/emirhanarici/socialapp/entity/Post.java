@@ -31,6 +31,9 @@ public class Post {
     private String image;
     @ElementCollection
     private List<String> likes;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Reply> replies;
     @Column(name = "createdAt")
     @CreationTimestamp
     private Date createdAt;

@@ -1,7 +1,9 @@
 package com.emirhanarici.socialapp.controller;
 
 import com.emirhanarici.socialapp.dto.CreatePostRequest;
+import com.emirhanarici.socialapp.dto.CreateReplyRequest;
 import com.emirhanarici.socialapp.dto.PostDto;
+import com.emirhanarici.socialapp.dto.ReplyDto;
 import com.emirhanarici.socialapp.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,14 @@ public class PostController {
         }
         return ResponseEntity
                 .ok("Post unliked successfully.");
+    }
+
+    @PutMapping("/reply/{postId}")
+    public ResponseEntity<ReplyDto> replyOnePost(@PathVariable Long postId, @RequestBody CreateReplyRequest request) {
+
+
+        return ResponseEntity
+                .ok(postService.replyOnePost(postId, request));
     }
 
 

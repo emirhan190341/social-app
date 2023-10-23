@@ -1,10 +1,11 @@
 package com.emirhanarici.socialapp.service;
 
-import com.emirhanarici.socialapp.dto.CreatePostRequest;
-import com.emirhanarici.socialapp.dto.PostDto;
-import com.emirhanarici.socialapp.dto.UserDto;
+import com.emirhanarici.socialapp.dto.*;
 import com.emirhanarici.socialapp.dto.converter.PostConverter;
+import com.emirhanarici.socialapp.dto.converter.ReplyConverter;
+import com.emirhanarici.socialapp.dto.converter.UserConverter;
 import com.emirhanarici.socialapp.entity.Post;
+import com.emirhanarici.socialapp.entity.Reply;
 import com.emirhanarici.socialapp.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,10 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PostConverter postConverter;
     private final UserService userService;
+    private final PostConverter postConverter;
+    private final ReplyConverter replyConverter;
+    private final UserConverter userConverter;
 
     public PostDto createOnePost(CreatePostRequest request) {
 
@@ -31,7 +34,7 @@ public class PostService {
 
     public List<PostDto> getFeedPosts() {
 
-        List<Post> posts  = new ArrayList<>();
+        List<Post> posts = new ArrayList<>();
 
         UserDto user = userService.getOneUserById(userService.getUserId());
         List<String> following = user.following();
@@ -72,5 +75,21 @@ public class PostService {
 
     }
 
+
+    public ReplyDto replyOnePost(Long postId, CreateReplyRequest request) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow();
+
+
+        Integer userId = userService.getUserId();
+
+        Reply reply = replyConverter.mapToEntity(request, userId, post);
+
+        post.getReplies().add(reply);
+        postRepository.save(post);
+
+        return ReplyDto.mapToDto(reply);
+    }
 
 }

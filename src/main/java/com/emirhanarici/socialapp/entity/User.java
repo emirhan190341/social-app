@@ -32,24 +32,16 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String profilePic;
-
-    //    @CollectionTable(name = "followers", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "followers")
     @ElementCollection
     private List<String> followers;
-
-    //    @CollectionTable(name = "following", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "following")
     @ElementCollection
     private List<String> following;
     private String bio;
     @Column(name = "createdAt")
-
     //LocalDateTimeStamp
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date createdAt;
-
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user")
